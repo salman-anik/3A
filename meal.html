@@ -40,15 +40,6 @@
             border-radius: 10px;
             line-height: 1.3rem;
         }
-        .data p:nth-child(2){
-            border-radius: 0px;
-            border-left: solid 1px white;
-            border-right: solid 1px white;
-        }
-        .data p:nth-child(3){
-            border-radius: 0px;
-            border-right: solid 1px white;
-        }
         table {
             margin: 0 auto;
             border-collapse: collapse;
@@ -140,10 +131,8 @@
 
         // Constructing HTML using variables
         var moreDataHTML = '<div class="data">';
-        moreDataHTML += '<p>মিল<br>' + totalMeal + ' টা</p>';
-        moreDataHTML += '<p>মোট<br>' + totalGet + ' ৳</p>';
-        moreDataHTML += '<p>খরচ<br>' + totalSpend + ' ৳</p>';
-        moreDataHTML += '<p>অবশিষ্ট<br>' + saving + ' ৳</p>';
+        moreDataHTML += '<p>মোট মিল<br>' + totalMeal + ' টা</p>';
+        moreDataHTML += '<p>মোট টাকা<br>' + totalGet + ' ৳</p>';
         moreDataHTML += '</div>';
 
         // Setting inner HTML of the element with class 'moredata'
