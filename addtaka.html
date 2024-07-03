@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taka</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js"></script>
+  </head>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    .background-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100dvh;
+    }
+    .main{
+      text-align: center;
+    }
+    .form-container {
+      display: none;
+      padding: 15px;
+      margin-top: -15dvh;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin: 20px;
+    }
+
+    input[type="text"],input[type="password"] {
+      width: calc(100% - 24px);
+      padding: 12px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: transparent;
+      outline: none;
+      color: white;
+    }
+    input::placeholder {
+      color: white;
+    }
+    button {
+      padding: 12px 20px;
+      background-color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #bab9b9;
+    }
+
+    #errorMsg {
+      color: red;
+    }
+
+    /* Loading Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #000;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Mobile Styles */
+    @media only screen and (max-width: 600px) {
+      .form-container {
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 20px 10px;
+      }
+
+      input[type="text"] {
+        width: calc(100% - 20px);
+      }
+    }
+  </style>
+
+  <body>
+    <nav>
+      <a href="index.html"><ion-icon name="people"></ion-icon></a>
+      <a href="meal.html"><ion-icon name="calendar"></ion-icon></a>
+      <a href="add.html"><ion-icon name="add-circle"></ion-icon></a>
+    </nav>
+
+
+    <div class="background-container" id="dataSection">
+
+
+      <div class="main">
+        <p id="wr"></p>
+        <input id="pass" type="password" placeholder="Enter PIN"/>
+        <button id="btn">Enter</button>
+      </div>
+  
+      <div class="form-container">
+        <h2>Add Money</h2>
+        <p id="dataErrorMessage"></p>
+        <form id="dataForm">
+          <input
+            autocomplete="off"
+            placeholder="Enter Name"
+            type="text"
+            id="usernameInput"
+            name="username"
+            required
+          /><br />
+          <input
+            autocomplete="off"
+            placeholder="Enter Amount"
+            type="text"
+            id="dataInput"
+            name="dataInput"
+            required
+          />
+          <button type="button" id="updateButton" onclick="submitDataForm()">
+            <span id="buttonText">Update</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script>
+
+      const btn = document.getElementById("btn");
+      const formContainer = document.querySelector(".form-container");
+      const main = document.getElementsByClassName('main')[0]; // Accessing the first element with index 0
+
+      btn.addEventListener("click", function () {
+        const pass = document.getElementById("pass").value;
+        if (pass === "1010") {
+          formContainer.style.display = "block"; // Show the form container
+          main.style.display = 'none'; // Hide the main container
+        }else{
+          const err = document.getElementById('wr');
+          err.innerHTML = "Wrong PIN"
+        }
+      });
+      
+
+
+
+
+      function showLoadingModal() {
+        const loadingModal = document.getElementById("loadingModal");
+        loadingModal.style.display = "flex";
+      }
+
+      function hideLoadingModal() {
+        const loadingModal = document.getElementById("loadingModal");
+        loadingModal.style.display = "none";
+      }
+
+      function submitDataForm() {
+        const usernameInput = document.getElementById("usernameInput");
+        const username = usernameInput.value.trim();
+        const errorMessageElement = document.getElementById("dataErrorMessage");
+
+        if (username === "") {
+          errorMessageElement.textContent = "Please enter Name.";
+          return;
+        }
+
+        errorMessageElement.textContent = "";
+
+        showLoadingModal();
+        const dataInput = document.getElementById("dataInput").value;
+
+        // Fetch data using POST request to Google Apps Script web app URL
+        fetch(
+          "https://script.google.com/macros/s/AKfycbxJtyto8PzmgiANOZTugsIaqik9jnpWg2wKHJC8bSQANM_M_SVwsvWYu_UPgDgxX_Hrig/exec",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body:
+              "data=" +
+              encodeURIComponent(dataInput) +
+              "&username=" +
+              encodeURIComponent(username),
+          }
+        )
+          .then((response) => response.text())
+          .then((updateResult) => {
+            if (updateResult === "Username not found in row 2") {
+              errorMessageElement.textContent = "Wrong Name";
+            } else {
+              console.log("Spreadsheet update result:", updateResult);
+              errorMessageElement.textContent = "Taka added Successfully";
+              document.getElementById("dataForm").reset();
+            }
+          })
+          .catch((error) => {
+            console.error("Error updating spreadsheet:", error);
+            errorMessageElement.textContent =
+              "Error updating spreadsheet. Please try again.";
+          })
+          .finally(() => {
+            hideLoadingModal();
+          });
+      }
+    </script>
+  </body>
+</html>

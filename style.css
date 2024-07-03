@@ -1,0 +1,45 @@
+body {
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    background-image: url(https://i.pinimg.com/564x/55/71/eb/5571eb8fd75f597bfba39fc6ac83b6aa.jpg);
+    color: rgb(246, 236, 236);
+}
+
+@font-face {
+    font-family: 'font1';
+    src: url(font1.ttf);
+ }
+
+*{
+    
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+nav{
+    border: 0.2px solid rgb(236, 232, 232);
+    width: 70vw;
+    display: flex;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 6vh;
+    backdrop-filter: blur(20px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 10px;
+    padding: 3px;
+    z-index: 1;
+}
+nav ion-icon{
+    font-size: 2rem;
+    padding: 5px;
+    text-align: center;
+    width: 60px;
+    border-radius: 10px;
+    color: white;
+}
+nav ion-icon:hover{
+    background-color: white;
+    color: black;
+}

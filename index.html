@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3A</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+      /* Add the CSS code here */
+
+      header {
+        backdrop-filter: blur(5px);
+        border: 0.5px solid rgb(236, 232, 232);
+        position: fixed;
+        z-index: 1;
+        right: 0px;
+        top: 10px;
+        display: flex;
+        width: 45vw;
+        font-size: 0.9rem;
+        padding: 5px;
+        border-radius: 10px 0 0 10px;
+        justify-content: center;
+      }
+      .two {
+        height: 100vh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+      }
+      main {
+        height: 100vh;
+        scroll-snap-align: start;
+      }
+
+      #profiles {
+        width: 100vw;
+        padding-top: 7vh;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .ami {
+        box-shadow: rgba(240, 237, 237, 0.249) 0px 1px 4px;
+        padding: 5px;
+        backdrop-filter: blur(5px);
+        border-radius: 10px;
+        width: 40vw;
+        margin: 10px;
+        border: 0.5px solid white;
+        text-align: center;
+      }
+
+      h2 {
+        margin-bottom: 3px;
+      }
+
+      p {
+        font-family: 'font1';
+        font-size: 0.9rem;
+        line-height: 0.8rem;
+        margin: 5px 0;
+      }
+
+
+      /*Bazar*/
+
+
+    .bazar {
+        scroll-snap-align: start;
+        height: 100vh;
+        display: grid;
+        place-items: center;
+      }
+      #profile-container{
+        height: 70vh;
+        width: 100vw;
+        overflow-y: scroll;
+        display: flex;
+        align-items: center;
+    }
+    #profile-container::-webkit-scrollbar {
+      width: 0px;
+      }
+        
+    .profile-card {
+        border: 1px solid #dddddd;
+        border-radius: 10px;
+        padding: 10px;
+        height: 60vh;
+        min-width: 90vw;
+        margin-bottom: 10px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        margin: 10px;
+    }
+    .profile-date{
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .profile-name {
+        width: 50%;
+        float: right;
+    }
+    .profile-roll {
+        width: 50%;
+    }
+    .profile-details {
+        position: relative;
+        top: 40%;
+        transform: translateY(-40%);
+        width: 100%;
+    }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <p>PerMealCharge</p>
+      <span id="headerContent"></span>
+    </header>
+
+    <nav>
+      <a href="index.html"><ion-icon name="people"></ion-icon></a>
+      <a href="meal.html"><ion-icon name="calendar"></ion-icon></a>
+      <a href="add.html"><ion-icon name="add-circle"></ion-icon></a>
+    </nav>
+
+    <div class="two">
+      <main>
+        <div id="profiles"></div>
+      </main>
+      <div class="bazar">
+        <div id="profile-container"></div>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          function csvToProfiles(csv) {
+              var lines = csv.split("\n");
+              var profilesHTML = "";
+  
+              var names = lines[0].split(",").slice(1, 17);
+  
+              for (var i = 0; i < names.length; i++) {
+                  var name = names[i].trim();
+  
+                  if (name === "") {
+                      continue;
+                  }
+  
+                  var meals = lines[34].split(",").slice(1, 17);
+                  var billsRow36 = lines[35].split(",").slice(1, 17);
+                  var givenMoneyRow37 = lines[36].split(",").slice(1, 17);
+                  var getBackMoneyRow38 = lines[37].split(",").slice(1, 17);
+  
+                  var meal = meals[i].trim();
+                  var bill = billsRow36[i].trim();
+                  var givenMoney = givenMoneyRow37[i].trim();
+                  var getBackMoney = getBackMoneyRow38[i].trim();
+  
+                  profilesHTML += '<div class="ami">';
+                  profilesHTML += "<h2>" + name + "</h2>";
+                  profilesHTML += "<p>মিল : " + meal + " টা</p>";
+                  profilesHTML += "<p>দেওয়া : " + givenMoney + " ৳</p>";
+                  profilesHTML += "<p>বিল : " + bill + " ৳</p>";
+                  profilesHTML += "<p>অবশিষ্ট : " + getBackMoney + " ৳</p>";
+                  profilesHTML += "</div>";
+              }
+  
+              return profilesHTML;
+          }
+  
+          function displayGoogleSheetsProfiles() {
+              var csvData = localStorage.getItem('MainData');
+              if (csvData) {
+                  var profilesHTML = csvToProfiles(csvData);
+                  document.getElementById("profiles").innerHTML = profilesHTML;
+              }
+          }
+  
+          displayGoogleSheetsProfiles();
+  
+          function displayDataInHeader(data) {
+              document.getElementById("headerContent").innerHTML =
+                  "<p>=" + data + "</p>";
+          }
+  
+          function displayDataFromA40() {
+              var dataA40 = localStorage.getItem('MainData');
+              if (dataA40) {
+                  dataA40 = getDataFromA40(dataA40);
+                  displayDataInHeader(dataA40);
+              }
+          }
+  
+          displayDataFromA40();
+  
+          function displayBazarData(csvData) {
+              Papa.parse(csvData, {
+                  complete: function (results) {
+                      var data = results.data.slice(1).reverse(); // Remove the first row and then reverse the remaining rows
+                      var profileContainer = document.getElementById('profile-container');
+  
+                      for (var i = 0; i < data.length; i++) {
+                          var rowData = data[i];
+  
+                          // Parse the date
+                          var dateParts = rowData[0].split(' ')[0].split('/');
+                          var formattedDate = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+                          var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                          formattedDate = formattedDate.toLocaleDateString('en-US', options);
+  
+                          // Create profile card HTML using template literals
+                          var profileCardHTML = `
+                              <div class="profile-card">
+                                  <div class="profile-date">${formattedDate}</div>
+                                  <div class="profile-name">${rowData[1]}</div>
+                                  <div class="profile-roll">${rowData[2]} Taka</div>
+                                  <div class="profile-details">${rowData[3]}</div>
+                              </div>
+                          `;
+  
+                          // Append profile card HTML to the container
+                          profileContainer.innerHTML += profileCardHTML;
+                      }
+                  }
+              });
+          }
+  
+          var bazarData = localStorage.getItem('Bazar');
+          if (bazarData) {
+              displayBazarData(bazarData);
+          }
+      });
+  </script>
+  </body>
+</html>
